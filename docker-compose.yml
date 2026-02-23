@@ -1,0 +1,105 @@
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: softpoint_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: db_softpoint
+      POSTGRES_USER: egalvan
+      POSTGRES_PASSWORD: eg4lv4n123
+
+    ports:
+      - "5434:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - softpoint_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U egalvan"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres_test:
+    image: postgres:16-alpine
+    container_name: softpoint_postgres_test
+    environment:
+      - POSTGRES_DB=db_testing
+      - POSTGRES_USER=egalvan
+      - POSTGRES_PASSWORD=eg4lv4n123
+    ports:
+      - "5435:5432"
+    networks:
+      - softpoint_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: softpoint_backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+      - backend_vendor:/var/www/vendor
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - softpoint_network
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: softpoint_queue
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+      - backend_vendor:/var/www/vendor
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - postgres
+      - backend
+    networks:
+      - softpoint_network
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: softpoint_frontend
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - frontend_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    networks:
+      - softpoint_network
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  postgres_data:
+  backend_vendor:
+  frontend_modules:
+
+networks:
+  softpoint_network:
+    driver: bridge
