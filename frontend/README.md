@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+### FRONTEND
+- **React 18** - UI Library
+- **TypeScript** - Type Safety
+- **Vite 5** - Build Tool
+- **TailwindCSS** - Styling
+- **React Hook Form** - Form Management
+- **Zod** - Schema Validation
+- **Chart.js** - Data Visualization
+- **React Router v6** - Client-side Routing
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Frontend Architecture
 
-Currently, two official plugins are available:
+**Pattern:** Component-based architecture with Context API for state
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+frontend/
+├── src/
+│   ├── api/                  # API client layer
+│   │   ├── client.ts         # HTTP client (fetch)
+│   │   ├── auth.ts           # Auth endpoints
+│   │   ├── properties.ts     # Property endpoints
+│   │   └── dashboard.ts      # Dashboard endpoints
+│   │
+│   ├── components/
+│   │   ├── common/           # Reusable UI components
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Card.tsx
+│   │   │   └── Modal.tsx
+│   │   │
+│   │   ├── forms/            # Form components
+│   │   │   ├── Select.tsx
+│   │   │   └── TextArea.tsx
+│   │   │
+│   │   └── layout/           # Layout components
+│   │       ├── Navbar.tsx
+│   │       ├── Sidebar.tsx
+│   │       └── DashboardLayout.tsx
+│   │
+│   ├── contexts/             # React Context
+│   │   └── AuthContext.tsx   # Authentication state
+│   │
+│   ├── hooks/                # Custom React hooks
+│   │   ├── useAuth.ts
+│   │   ├── useApi.ts
+│   │   └── useToast.ts
+│   │
+│   ├── pages/                # Page components
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   └── properties/
+│   │
+│   ├── routes/               # Routing
+│   │   ├── AppRoutes.tsx
+│   │   ├── PrivateRoute.tsx
+│   │   └── PublicRoute.tsx
+│   │
+│   ├── types/                # TypeScript types
+│   │   ├── auth.ts
+│   │   ├── property.ts
+│   │   └── api.ts
+│   │
+│   └── utils/                # Utility functions
+│       ├── formatters.ts
+│       └── constants.ts
 ```
