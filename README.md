@@ -378,4 +378,11 @@ The application includes automated tests for the backend API.
 docker-compose exec backend php artisan test --env=testing
 ```
 
+## FUTURE ENHANCEMENTS
+
+- Convert `real_estate_type` and `country` to dynamic catalogs
+- Add admin panel for catalog management
+- Support for multilingual property types
+
+
 **Last Updated:** February 2026
